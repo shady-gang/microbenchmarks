@@ -109,15 +109,19 @@ int main(int argc, char** argv) {
 
     int nargs = 3;
     void* args[] = { &buf_a_addr, &buf_b_addr, &buf_c_addr };
-    wait_completion(launch_kernel(program, device, "simple_iadd_global_buffers", buffer_size / 256, 1, 1, nargs, args));
+    wait_completion(launch_kernel(program, device, "simple_iadd_global_buffers", buffer_size / 256, 1, 1, nargs, args, NULL));
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     uint64_t tsn = timespec_to_nano(ts);
-    wait_completion(launch_kernel(program, device, "simple_iadd_global_buffers", buffer_size / 256, 1, 1, nargs, args));
+    uint64_t profiled_gpu_time = 0;
+    shady::ExtraKernelOptions extra_options = {
+        .profiled_gpu_time = &profiled_gpu_time,
+    };
+    wait_completion(launch_kernel(program, device, "simple_iadd_global_buffers", buffer_size / 256, 1, 1, nargs, args, &extra_options));
     struct timespec tp;
     timespec_get(&tp, TIME_UTC);
     uint64_t tpn = timespec_to_nano(tp);
-    printf("kernel took %d us\n", (tpn - tsn) / 1000);
+    printf("kernel took %dus (gpu time: %dus)\n", (tpn - tsn) / 1000, profiled_gpu_time / 1000);
 
     int32_t* fin = (int32_t*) calloc(sizeof(int32_t), buffer_size);
     shady::copy_from_buffer(buf_c, 0, fin, buffer_size * sizeof(int32_t));
