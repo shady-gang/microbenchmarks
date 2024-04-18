@@ -26,4 +26,5 @@ endfunction()
 
 add_benchmark(NAME add_buffers OPTIONS -std=c++17 -O3)
 add_benchmark(NAME fib OPTIONS -std=c++17 -O1)
+add_benchmark(NAME fn_pointers OPTIONS -std=c++17 -O1)
 
