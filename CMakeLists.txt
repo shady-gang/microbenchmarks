@@ -8,10 +8,10 @@ find_package(shady REQUIRED)
 #target_link_libraries(microbenchmarks PRIVATE shady::runtime shady::driver)
 
 function(add_benchmark)
-    cmake_parse_arguments(PARSE_ARGV 0 F "" "NAME" "" )
+    cmake_parse_arguments(PARSE_ARGV 0 F "" "NAME" "OPTIONS" )
 
     # prepare the .ll file for the runtime to eat
-    add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll COMMAND shady::vcc ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp -std=c++17 --only-run-clang -O3 -o ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp)
+    add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll COMMAND shady::vcc ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp ${F_OPTIONS} --only-run-clang -o ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp)
     add_custom_target("${F_NAME}_ll" DEPENDS  ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll)
 
     add_executable("${F_NAME}" ${F_NAME}.cpp bench.cpp)
@@ -24,5 +24,6 @@ function(add_benchmark)
     # todo nvcc ?
 endfunction()
 
-add_benchmark(NAME add_buffers)
+add_benchmark(NAME add_buffers OPTIONS -std=c++17 -O3)
+add_benchmark(NAME fib OPTIONS -std=c++17 -O1)
 
