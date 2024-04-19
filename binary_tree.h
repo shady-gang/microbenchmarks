@@ -6,7 +6,20 @@ struct TreeNode {
 };
 
 template<typename K>
-TreeNode<K>* find(TreeNode<K>* tree, K value) {
+FN_PREFIX TreeNode<K>* find(TreeNode<K>* tree, K value) {
+    while (tree) {
+        if (tree->key == value)
+            return tree;
+        else if (value < tree->key && tree->children[0])
+            tree = tree->children[0];
+        else if (value > tree->key && tree->children[1])
+            tree = tree->children[1];
+    }
+    return nullptr;
+}
+
+template<typename K>
+FN_PREFIX TreeNode<K>* find_rec(TreeNode<K>* tree, K value) {
     if (tree->key == value)
         return tree;
     else if (value < tree->key && tree->children[0])
@@ -17,7 +30,7 @@ TreeNode<K>* find(TreeNode<K>* tree, K value) {
 }
 
 template<typename K>
-TreeNode<K>* skew(TreeNode<K>* t) {
+FN_PREFIX TreeNode<K>* skew(TreeNode<K>* t) {
     if (t->children[0] == nullptr)
         return t;
     else if (t->children[0]->depth == t->depth) {
@@ -28,8 +41,9 @@ TreeNode<K>* skew(TreeNode<K>* t) {
     } else
         return t;
 }
+
 template<typename K>
-TreeNode<K>* split(TreeNode<K>* t) {
+FN_PREFIX TreeNode<K>* split(TreeNode<K>* t) {
     if (!t->children[1] || !t->children[1]->children[1])
         return t;
     else if (t->depth == t->children[1]->children[1]->depth) {
@@ -43,7 +57,7 @@ TreeNode<K>* split(TreeNode<K>* t) {
 }
 
 template<typename K>
-TreeNode<K>* insert(TreeNode<K>* t, TreeNode<K>* x) {
+FN_PREFIX TreeNode<K>* insert(TreeNode<K>* t, TreeNode<K>* x) {
     if (t == nullptr) {
         x->depth = 1;
         return x;

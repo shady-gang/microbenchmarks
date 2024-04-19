@@ -3,6 +3,7 @@
 
 using namespace vcc;
 
+#define FN_PREFIX
 #include "binary_tree.h"
 
 extern "C" {

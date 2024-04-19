@@ -1,5 +1,6 @@
 #include "bench.h"
 
+#define FN_PREFIX
 #include "binary_tree.h"
 
 unsigned int FNVHash(char* str, unsigned int length) {
@@ -28,8 +29,8 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
     shady::driver_load_source_file(compiler_config, shady::SrcLLVM, size, src, "m", &m);
     shady::Program* program = new_program_from_module(runtime, compiler_config, m);
 
-    size_t buffer_size = 0x10000;
-    int max = 500;
+    size_t buffer_size = 0x1000000;
+    int max = 50000;
     int* numbers = (int*) calloc(buffer_size, sizeof(uint32_t));
     Node* nodes = (Node*) calloc(buffer_size, sizeof(Node));
     Node* root = nullptr;
