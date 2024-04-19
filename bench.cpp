@@ -36,9 +36,7 @@ static void cli_parse_common_app_arguments(CommonAppArgs* args, int* pargc, char
 
 int main(int argc, char** argv) {
     CommonAppArgs common_args = {};
-    shady::RuntimeConfig runtime_config = {};
-    runtime_config.use_validation = true;
-    runtime_config.dump_spv = true;
+    shady::RuntimeConfig runtime_config = shady::default_runtime_config();
     shady::DriverConfig driver_config = shady::default_driver_config();
     shady::CompilerConfig& compiler_config = driver_config.config;
     compiler_config.hacks.restructure_everything = true;
@@ -47,6 +45,7 @@ int main(int argc, char** argv) {
     shady::cli_parse_driver_arguments(&driver_config, &argc, argv);
     shady::cli_parse_common_args(&argc, argv);
     shady::cli_parse_compiler_config_args(&compiler_config, &argc, argv);
+    shady::cli_parse_runtime_config(&runtime_config, &argc, argv);
 
     shady::Runtime* runtime = shady::initialize_runtime(runtime_config);
     shady::Device* device = shady::get_device(runtime, common_args.device);
