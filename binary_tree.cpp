@@ -18,18 +18,6 @@ unsigned int FNVHash(char* str, unsigned int length) {
 
 using Node = TreeNode<int>;
 
-template<typename K>
-TreeNode<K>* findd(TreeNode<K>* tree, K value) {
-    printf("%d ", tree->key);
-    if (tree->key == value)
-        return tree;
-    else if (value < tree->key && tree->children[0])
-        return findd(tree->children[0], value);
-    else if (value > tree->key && tree->children[1])
-        return findd(tree->children[1], value);
-    return nullptr;
-}
-
 void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::CompilerConfig* compiler_config) {
     size_t size;
     char* src;
@@ -40,7 +28,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
     shady::driver_load_source_file(compiler_config, shady::SrcLLVM, size, src, "m", &m);
     shady::Program* program = new_program_from_module(runtime, compiler_config, m);
 
-    size_t buffer_size = 32;
+    size_t buffer_size = 0x10000;
     int max = 500;
     int* numbers = (int*) calloc(buffer_size, sizeof(uint32_t));
     Node* nodes = (Node*) calloc(buffer_size, sizeof(Node));
@@ -56,20 +44,12 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
     for (int n = 0; n < max; n++) {
         Node* found = find(root, n);
         if (found) {
-            printf("found %d at depth %d\n", n, found->depth);
+            //printf("found %d at depth %d\n", n, found->depth);
             if (found->depth > max_depth)
                 max_depth = found->depth;
         }
     }
     printf("max depth %d\n", max_depth);
-
-    for (size_t i = 0; i < 32; i++) {
-        printf("%d n=%d ", buffer_size - 32 + i, numbers[buffer_size - 32 + i]);
-        bool b = findd(root, numbers[buffer_size - 32 + i]);
-        printf(" found=%s\n", b ? "true" : "false");
-        //printf("%d %d %d \n", buffer_size - 32 + i, numbers[buffer_size - 32 + i], find(root, numbers[buffer_size - 32 + i]) ? 1 : 0);
-    }
-    printf("\n");
 
     shady::Buffer* buf_a = shady::allocate_buffer_device(device, buffer_size * sizeof(int32_t));
     shady::copy_to_buffer(buf_a, 0, numbers, buffer_size * sizeof(uint32_t));
@@ -93,7 +73,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
     int nargs = 3;
     uint64_t root_addr = buf_nodes_addr + ((uint64_t)root - (uint64_t)nodes);
     void* args[] = { &buf_a_addr, &buf_b_addr, &root_addr };
-    wait_completion(launch_kernel(program, device, "treesearch", buffer_size / 32, 1, 1, nargs, args, NULL));
+    wait_completion(launch_kernel(program, device, "treesearch", buffer_size / 256, 1, 1, nargs, args, NULL));
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     uint64_t tsn = timespec_to_nano(ts);
@@ -101,7 +81,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
     shady::ExtraKernelOptions extra_options = {
             .profiled_gpu_time = &profiled_gpu_time,
     };
-    wait_completion(launch_kernel(program, device, "treesearch", buffer_size / 32, 1, 1, nargs, args, &extra_options));
+    wait_completion(launch_kernel(program, device, "treesearch", buffer_size / 256, 1, 1, nargs, args, &extra_options));
     struct timespec tp;
     timespec_get(&tp, TIME_UTC);
     uint64_t tpn = timespec_to_nano(tp);
