@@ -18,7 +18,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
 
     shady::Buffer* buf_b = shady::allocate_buffer_device(device, buffer_size * sizeof(int32_t));
     fill_buffer<int32_t>(buf_b, buffer_size);
-    uint64_t buf_b_addr = shady::get_buffer_device_pointer(buf_a);
+    uint64_t buf_b_addr = shady::get_buffer_device_pointer(buf_b);
 
     shady::Buffer* buf_c = shady::allocate_buffer_device(device, buffer_size * sizeof(int32_t));
     fill_buffer<int32_t>(buf_c, buffer_size, true);
