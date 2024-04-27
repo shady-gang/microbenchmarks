@@ -19,7 +19,6 @@ int fib(int n) {
 compute_shader local_size(256, 1, 1)
 void fib_main(global int32_t* a) {
     int i = gl_GlobalInvocationID.x;
-    //debug_printfi("hi=%d\n", i);
     a[i] = fib(i % 16);
 }
 

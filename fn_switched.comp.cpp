@@ -28,9 +28,12 @@ void debug_printfll(const char*, long long) __asm__("shady::prim_op::debug_print
 compute_shader local_size(256, 1, 1)
 void fn_ptrs(global int32_t* a, global int32_t* b, global int32_t* c) {
     int i = gl_GlobalInvocationID.x;
-    int (*fns[4])(int, int) = { f, g, h, k };
-    int (*fn)(int, int) = fns[i % 4];
-    c[i] = fn(a[i], b[i]) + 41;
+    switch (i % 4) {
+        case 0: c[i] = f(a[i], b[i]) + 41; return;
+        case 1: c[i] = g(a[i], b[i]) + 41; return;
+        case 2: c[i] = h(a[i], b[i]) + 41; return;
+        case 3: c[i] = k(a[i], b[i]) + 41; return;
+    }
 }
 
 }

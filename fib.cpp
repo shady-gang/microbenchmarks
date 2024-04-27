@@ -1,6 +1,8 @@
 #include "bench.h"
 
-void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::CompilerConfig* compiler_config) {
+void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, shady::CompilerConfig* compiler_config) {
+    compiler_config->hacks.restructure_everything = false;
+
     size_t size;
     char* src;
     bool ok = read_file(LL_FILE_NAME, &size, &src);
@@ -10,7 +12,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::Com
     shady::driver_load_source_file(compiler_config, shady::SrcLLVM, size, src, "m", &m);
     shady::Program* program = new_program_from_module(runtime, compiler_config, m);
 
-    size_t buffer_size = 256;
+    size_t buffer_size = 1024 * 4 * 256;
 
     shady::Buffer* buf_a = shady::allocate_buffer_device(device, buffer_size * sizeof(int32_t));
     fill_buffer<int32_t>(buf_a, buffer_size, true);

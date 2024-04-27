@@ -1,6 +1,6 @@
 #include "bench.h"
 
-void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::CompilerConfig* compiler_config) {
+void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, shady::CompilerConfig* compiler_config) {
     size_t size;
     char* src;
     bool ok = read_file(LL_FILE_NAME, &size, &src);

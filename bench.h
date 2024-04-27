@@ -37,6 +37,6 @@ inline static void fill_buffer(shady::Buffer* b, size_t size, bool zeroes = fals
     free(tmp);
 }
 
-void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, const shady::CompilerConfig* compiler_config);
+void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, shady::CompilerConfig* compiler_config);
 
 #endif BENCH_H
