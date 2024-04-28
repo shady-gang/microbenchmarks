@@ -25,10 +25,11 @@ int k(int x, int y) {
 
 void debug_printfll(const char*, long long) __asm__("shady::prim_op::debug_printf::ll");
 
+int (*fns[4])(int, int) = { f, g, h, k };
+
 compute_shader local_size(256, 1, 1)
 void fn_ptrs(global int32_t* a, global int32_t* b, global int32_t* c) {
     int i = gl_GlobalInvocationID.x;
-    int (*fns[4])(int, int) = { f, g, h, k };
     int (*fn)(int, int) = fns[i % 4];
     c[i] = fn(a[i], b[i]) + 41;
 }

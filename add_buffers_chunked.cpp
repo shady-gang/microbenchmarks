@@ -26,7 +26,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, shady::CompilerC
 
     int nargs = 3;
     void* args[] = { &buf_a_addr, &buf_b_addr, &buf_c_addr };
-    wait_completion(launch_kernel(program, device, "add_buffers", buffer_size / 256, 1, 1, nargs, args, NULL));
+    wait_completion(launch_kernel(program, device, "add_chunked", (buffer_size / 256) / 16, 1, 1, nargs, args, NULL));
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     uint64_t tsn = timespec_to_nano(ts);
@@ -34,7 +34,7 @@ void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, shady::CompilerC
     shady::ExtraKernelOptions extra_options = {
             .profiled_gpu_time = &profiled_gpu_time,
     };
-    wait_completion(launch_kernel(program, device, "add_buffers", buffer_size / 256, 1, 1, nargs, args, &extra_options));
+    wait_completion(launch_kernel(program, device, "add_chunked",  (buffer_size / 256) / 16, 1, 1, nargs, args, &extra_options));
     struct timespec tp;
     timespec_get(&tp, TIME_UTC);
     uint64_t tpn = timespec_to_nano(tp);
