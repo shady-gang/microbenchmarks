@@ -45,9 +45,15 @@ void unions_kernel(S* a, global unsigned int* b) {
     for (int j = 0; j < 16; j++) {
         arr[j] = patch(a[j], i);
     }
-    // S s = a[i];
-    b[i] = hash_fnv((char*) &arr[0], sizeof(arr));
-    //b[i] = 69;
+
+    int rounds = 8;
+    unsigned int acc = 0;
+    for (int k = 0; k < rounds; k++) {
+        for (int j = 0; j < 16; j++)
+            arr[j] = patch(arr[j], i);
+        acc ^= hash_fnv((char*) &arr[0], sizeof(arr));
+    }
+    b[i] = acc;
 }
 
 }
