@@ -10,9 +10,9 @@ FN_PREFIX TreeNode<K>* find(TreeNode<K>* tree, K value) {
     while (tree) {
         if (tree->key == value)
             return tree;
-        else if (value < tree->key && tree->children[0])
+        else if (value < tree->key)
             tree = tree->children[0];
-        else if (value > tree->key && tree->children[1])
+        else if (value > tree->key)
             tree = tree->children[1];
     }
     return nullptr;
