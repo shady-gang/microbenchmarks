@@ -8,7 +8,7 @@ extern "C" {
 private int fib_stack_size = 0;
 private int fib_stack[32];
 
-int fib(int n) {
+static int fib(int n) {
     int r;
 
     while (1) {

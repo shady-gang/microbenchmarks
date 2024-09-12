@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     shady::RuntimeConfig runtime_config = shady::default_runtime_config();
     shady::DriverConfig driver_config = shady::default_driver_config();
     shady::CompilerConfig& compiler_config = driver_config.config;
-    compiler_config.hacks.restructure_everything = true;
+    compiler_config.input_cf.restructure_with_heuristics = true;
 
     cli_parse_common_app_arguments(&common_args, &argc, argv);
     shady::cli_parse_driver_arguments(&driver_config, &argc, argv);
