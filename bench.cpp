@@ -31,24 +31,24 @@ static void cli_parse_common_app_arguments(CommonAppArgs* args, int* pargc, char
         exit(0);
     }
 
-    shady::cli_pack_remaining_args(pargc, argv);
+    shady::shd_pack_remaining_args(pargc, argv);
 }
 
 int main(int argc, char** argv) {
     CommonAppArgs common_args = {};
-    shady::RuntimeConfig runtime_config = shady::default_runtime_config();
-    shady::DriverConfig driver_config = shady::default_driver_config();
+    shady::RunnerConfig runtime_config = shady::shd_rn_default_config();
+    shady::DriverConfig driver_config = shady::shd_default_driver_config();
     shady::CompilerConfig& compiler_config = driver_config.config;
     compiler_config.input_cf.restructure_with_heuristics = true;
 
     cli_parse_common_app_arguments(&common_args, &argc, argv);
-    shady::cli_parse_driver_arguments(&driver_config, &argc, argv);
-    shady::cli_parse_common_args(&argc, argv);
-    shady::cli_parse_compiler_config_args(&compiler_config, &argc, argv);
-    shady::cli_parse_runtime_config(&runtime_config, &argc, argv);
+    shady::shd_parse_driver_args(&driver_config, &argc, argv);
+    shady::shd_parse_common_args(&argc, argv);
+    shady::shd_parse_compiler_config_args(&compiler_config, &argc, argv);
+    shady::shd_rn_cli_parse_config(&runtime_config, &argc, argv);
 
-    shady::Runtime* runtime = shady::initialize_runtime(runtime_config);
-    shady::Device* device = shady::get_device(runtime, common_args.device);
+    shady::Runner* runtime = shady::shd_rn_initialize(runtime_config);
+    shady::Device* device = shady::shd_rn_get_device(runtime, common_args.device);
     assert(device);
 
     BENCH_NAME(runtime, device, &compiler_config);

@@ -17,7 +17,7 @@ function(add_benchmark)
     add_executable("${F_NAME}" ${F_HOST_FILE}.cpp bench.cpp)
     target_compile_definitions("${F_NAME}" PRIVATE -DLL_FILE_NAME="${F_NAME}.comp.cpp.ll")
     target_compile_definitions("${F_NAME}" PRIVATE -DBENCH_NAME=${F_NAME})
-    target_link_libraries("${F_NAME}" PRIVATE shady::runtime shady::driver)
+    target_link_libraries("${F_NAME}" PRIVATE shady::runner shady::driver)
     add_dependencies(${F_NAME} "${F_NAME}_ll")
     #target_link_libraries("${F_NAME}_lib")
 

@@ -12,7 +12,7 @@
 extern "C" {
 namespace shady {
 
-#include "shady/runtime.h"
+#include "shady/runner/runner.h"
 #include "shady/driver.h"
 
 }
@@ -33,10 +33,10 @@ inline static void fill_buffer(shady::Buffer* b, size_t size, bool zeroes = fals
     T* tmp = (T*) calloc(sizeof(T), size);
     if (!zeroes) for (size_t i = 0; i < size; i++)
             tmp[i] = (T) i;
-    shady::copy_to_buffer(b, 0, tmp, size * sizeof(T));
+    shady::shd_rn_copy_to_buffer(b, 0, tmp, size * sizeof(T));
     free(tmp);
 }
 
-void BENCH_NAME(shady::Runtime* runtime, shady::Device* device, shady::CompilerConfig* compiler_config);
+void BENCH_NAME(shady::Runner* runtime, shady::Device* device, shady::CompilerConfig* compiler_config);
 
 #endif BENCH_H
