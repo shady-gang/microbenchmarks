@@ -11,10 +11,10 @@ function(add_benchmark)
     cmake_parse_arguments(PARSE_ARGV 0 F "" "NAME;HOST_FILE" "OPTIONS" )
 
     # prepare the .ll file for the runtime to eat
-    add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll COMMAND shady::vcc ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp ${F_OPTIONS} --only-run-clang -o ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp)
+    add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll COMMAND shady::vcc ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp ${F_OPTIONS} --only-run-clang -o ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll --target spirv DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${F_NAME}.comp.cpp)
     add_custom_target("${F_NAME}_ll" DEPENDS  ${CMAKE_BINARY_DIR}/${F_NAME}.comp.cpp.ll)
 
-    add_executable("${F_NAME}" ${F_HOST_FILE}.cpp bench.cpp)
+    add_executable("${F_NAME}" ${F_HOST_FILE}.cpp bench.cpp util.c)
     target_compile_definitions("${F_NAME}" PRIVATE -DLL_FILE_NAME="${F_NAME}.comp.cpp.ll")
     target_compile_definitions("${F_NAME}" PRIVATE -DBENCH_NAME=${F_NAME})
     target_link_libraries("${F_NAME}" PRIVATE shady::runner shady::driver)
