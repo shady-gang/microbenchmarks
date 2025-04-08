@@ -9,7 +9,8 @@ void BENCH_NAME(shady::Runner* runtime, shady::Device* device, shady::CompilerCo
     assert(ok);
 
     shady::Module* m;
-    shady::shd_driver_load_source_file(compiler_config, shady::SrcLLVM, size, src, "m", &m);
+    shady::TargetConfig target_config = shd_rn_get_device_target_config(device);
+    shady::shd_driver_load_source_file(compiler_config, &target_config, shady::SrcLLVM, size, src, "m", &m);
     shady::Program* program = shd_rn_new_program_from_module(runtime, compiler_config, m);
 
     size_t buffer_size = 1024;
