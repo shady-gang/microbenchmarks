@@ -4,6 +4,7 @@ project(shady-microbenchmarks)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(shady REQUIRED)
+find_package(Vulkan REQUIRED)
 #add_executable(microbenchmarks main.cpp)
 #target_link_libraries(microbenchmarks PRIVATE shady::runtime shady::driver)
 
@@ -33,6 +34,6 @@ add_benchmark(NAME fib_tailrec                 HOST_FILE fib                 OPT
 add_benchmark(NAME fib_mangled                 HOST_FILE fib                 OPTIONS -std=c++20 -O1)
 add_benchmark(NAME fn_switched                 HOST_FILE fn_pointers         OPTIONS -std=c++20 -O1)
 add_benchmark(NAME fn_pointers                 HOST_FILE fn_pointers         OPTIONS -std=c++20 -O3)
-add_benchmark(NAME binary_tree                 HOST_FILE binary_tree         OPTIONS -std=c++20 -O1)
+add_benchmark(NAME binary_tree                 HOST_FILE binary_tree         OPTIONS -std=c++20 -O3)
 add_benchmark(NAME unions                      HOST_FILE unions              OPTIONS -std=c++20 -O1)
 

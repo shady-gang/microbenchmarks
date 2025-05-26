@@ -5,7 +5,8 @@ using namespace vcc;
 
 extern "C" {
 
-void debug_printfi(const char*, int) __asm__("shady::prim_op::debug_printf::i");
+void debug_printflli(const char*, long long, int) __asm__("shady::instruction::DebugPrintf");
+
 int get_stack_size(void) __asm__("shady::prim_op::get_stack_size");
 
 int fib(int n) {

@@ -6,11 +6,14 @@ void BENCH_NAME(shady::Runner* runtime, shady::Device* device, shady::CompilerCo
     bool ok = read_file(LL_FILE_NAME, &size, &src);
     assert(ok);
 
+    shady::TargetConfig target_config = shady::shd_default_target_config();
+
     shady::Module* m;
-    shady::shd_driver_load_source_file(compiler_config, shady::SrcLLVM, size, src, "m", &m);
+    shady::shd_driver_load_source_file(compiler_config, &target_config, shady::SrcLLVM, size, src, "m", &m);
+    compiler_config->dynamic_scheduling = false;
     shady::Program* program = shd_rn_new_program_from_module(runtime, compiler_config, m);
 
-    size_t buffer_size = 0x1000000;
+    size_t buffer_size = 1024 * 1024 * 16;
 
     shady::Buffer* buf_a = shady::shd_rn_allocate_buffer_device(device, buffer_size * sizeof(int32_t));
     fill_buffer<int32_t>(buf_a, buffer_size);

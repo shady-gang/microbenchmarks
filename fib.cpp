@@ -9,11 +9,12 @@ void BENCH_NAME(shady::Runner* runtime, shady::Device* device, shady::CompilerCo
     assert(ok);
 
     shady::Module* m;
-    shady::TargetConfig target_config = shd_rn_get_device_target_config(device);
+    shady::TargetConfig target_config = shady::shd_default_target_config();
     shady::shd_driver_load_source_file(compiler_config, &target_config, shady::SrcLLVM, size, src, "m", &m);
     shady::Program* program = shd_rn_new_program_from_module(runtime, compiler_config, m);
 
-    size_t buffer_size = 1024;
+    size_t wg_size = 256;
+    size_t buffer_size = wg_size * 1024 * 4;
 
     shady::Buffer* buf_a = shady::shd_rn_allocate_buffer_device(device, buffer_size * sizeof(int32_t));
     fill_buffer<int32_t>(buf_a, buffer_size, true);
@@ -21,7 +22,7 @@ void BENCH_NAME(shady::Runner* runtime, shady::Device* device, shady::CompilerCo
 
     int nargs = 1;
     void* args[] = { &buf_a_addr };
-    shd_rn_wait_completion(shd_rn_launch_kernel(program, device, "fib_main", buffer_size / 256, 1, 1, nargs, args, NULL));
+    shd_rn_wait_completion(shd_rn_launch_kernel(program, device, "fib_main", buffer_size / wg_size, 1, 1, nargs, args, NULL));
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     uint64_t tsn = timespec_to_nano(ts);
@@ -29,7 +30,7 @@ void BENCH_NAME(shady::Runner* runtime, shady::Device* device, shady::CompilerCo
     shady::ExtraKernelOptions extra_options = {
             .profiled_gpu_time = &profiled_gpu_time,
     };
-    shd_rn_wait_completion(shd_rn_launch_kernel(program, device, "fib_main", buffer_size / 256, 1, 1, nargs, args, &extra_options));
+    shd_rn_wait_completion(shd_rn_launch_kernel(program, device, "fib_main", buffer_size / wg_size, 1, 1, nargs, args, &extra_options));
     struct timespec tp;
     timespec_get(&tp, TIME_UTC);
     uint64_t tpn = timespec_to_nano(tp);
